@@ -4,25 +4,25 @@ pipeline{
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
     stages{
-       stage('Git Checkout Stage'){
+       stage('Checkout Stage'){
             steps{
                 git branch: 'main', url: 'https://github.com/brad-jivedh/java-example.git'
             }
          }        
-        stage('Build docker Image'){
+        stage('Building the docker image'){
            steps{
             sh 'docker build -t jivedh2019/assign_2:IMAGE_TAG .'
           }
         }
-        stage('Push To Dockerhub'){
+        stage('Pushing the image to Dockerhub'){
           steps{
             sh 'docker push jivedh2019/assign_2:IMAGE_TAG'
           }
         }
-        stage('Deploy Stage') {
+        stage('Deploying in k8s cluster') {
           steps{
-            sh 'microk8s kubectl apply -f deploy.yml'
-            sh 'microk8s kubectl apply -f service.yml'
+            sh 'microk8s kubectl apply -f deploy.yaml'
+            sh 'microk8s kubectl apply -f nodeport.yaml'
           } 
         }
     }
